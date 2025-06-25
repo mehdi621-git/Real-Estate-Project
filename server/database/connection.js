@@ -3,8 +3,8 @@ import mongoose from 'mongoose';
 
 dotenv.config();
 
-const connection = () => {
-  mongoose.connect(process.env.MONGO, {
+const connection =  () => {
+ mongoose.connect(process.env.MONGO, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   }).then(() => {
