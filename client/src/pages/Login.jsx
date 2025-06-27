@@ -1,12 +1,14 @@
 import {Link, useNavigate} from 'react-router-dom'
 import Button from '../Components/Button'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { SignInFailure, SignInProgress, SignInStart } from '../redux/user/userSlice'
 
 const Login= () => {
 const [formData,setformData] = useState({})
-const [loading,setLoading] =useState(false)
-const [error,seterror] =useState()
+const {loading,error}=useSelector((state)=>state.user)
 const navigate =useNavigate()
+const dispatch = useDispatch()
   const handleFormData = (e)=>{
             setformData({
               ...formData,[e.target.id]:e.target.value
@@ -18,7 +20,7 @@ const navigate =useNavigate()
    
     console.log("Submited");
    try {
-    setLoading(true)
+  dispatch(SignInStart())
      const res= await fetch('/server/auth/signin',{
       method:"POST",
       headers:{
@@ -28,22 +30,19 @@ const navigate =useNavigate()
         body: JSON.stringify(formData),
       
     })
-     setLoading(false)
+   
     const data = await res.json();
     console.log(data)
   if(data.success == false){
-      seterror(data.message)
+      dispatch(SignInFailure(data.message))
       return
       }
-
-    seterror(null)
+dispatch(SignInProgress(data.user))
     navigate('/')
     
 
    } catch (error) {
-     setLoading(false)
-       
-      seterror(error.message)
+   dispatch(SignInFailure(error.message))
  
    }
    
