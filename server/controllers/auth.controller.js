@@ -2,6 +2,8 @@ import user from "../models/user.model.js";
 import bcryptjs from 'bcryptjs'
 import { error } from "../utils/error.js";
 import jwt from 'jsonwebtoken'
+
+
 export const Signup=async (req,res,next)=>{
 console.log(req.body)
 
@@ -33,4 +35,26 @@ export const Signin =async (req,res,next)=>{
             } catch (error) {
                 next(error)
             }
+}
+export const googleAuth =async (req,res,next)=>{
+    const {email,username,photo} =req.body;
+    try {
+        const searchuser = await user.findOne({email});
+  
+        if(searchuser){
+                   const {password:pass , ...rest}=searchuser._doc
+            const token = jwt.sign({'id':searchuser._id} , process.env.jwtTOKEN);
+            return res.cookie('token',token,{httpOnly:true,expires:new Date(Date.now()+24*60*60)}).status(200).json({"user":rest})
+        }else{
+        const randomPassword = Math.random().toString(36).slice(-8);
+        const hashPassword =bcryptjs.hashSync(randomPassword,10);
+        const newuser = new user({email,username:username+Math.random().toString(36).slice(-5),password : hashPassword,photo});
+        await newuser.save()
+      const {password:pass , ...rest}=searchuser._doc
+       const token = jwt.sign({'id':searchuser._id} , process.env.jwtTOKEN);
+            return res.cookie('token',token,{httpOnly:true,expires:new Date(Date.now()+24*60*60)}).status(200).json({"user":rest})
+        }
+    } catch (error) {
+        next(error)
+    }
 }
