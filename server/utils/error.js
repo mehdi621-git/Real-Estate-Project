@@ -3,4 +3,4 @@ export const error = (statuscode , message)=>{
     err.statusCode = statuscode;
     err.message = message ;
      return err
-}
+} ;

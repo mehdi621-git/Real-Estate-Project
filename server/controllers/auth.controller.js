@@ -58,3 +58,26 @@ export const googleAuth =async (req,res,next)=>{
         next(error)
     }
 }
+export const deleteUser = async (req, res, next) => {
+  try {
+    const deletedUser = await user.findByIdAndDelete(req.params.id); 
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: `User with email ${deletedUser.email} deleted successfully`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const SignOut =(req,res,next)=>{
+    try {
+         res.clearCookie('token');
+         res.status(200).json({success:true , message: "User has been Log Out"})
+    } catch (error) {
+        next(error)
+    }
+}
