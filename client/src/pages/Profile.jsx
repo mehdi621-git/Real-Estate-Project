@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import Button from '../Components/Button'
 import { useState } from 'react'
 import { deleteUserFailure, deleteUserStart, deleteUserSuccess, ProfileUpdationStart, SignoutFailure, SignoutStart, SignoutSuccess, UpdateProfileError, UpdateUserProgress } from '../redux/user/userSlice'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import Input from '../Components/Input'
 
 const Profile = () => {
   const {user,error,loading} =useSelector(state=>state.user)
@@ -132,14 +133,14 @@ dispatch(SignoutSuccess())
 <p className='text-green-700'>{!error && loading && progress !=0 ? progress == '100' ? "Updating..." : progress + "%": ""} 
 </p>
 {error && <p className='text-red-600'>{error}</p>}
-       <input type="text" className='p-2 border rounded-md  w-full outline-none' placeholder='UserName' id="username" defaultValue={user.username} onChange={handleFormData}/>
+       <Input type="text" styles='p-2 border rounded-md  w-full outline-none' plc='UserName' id="username" defVal={user.username} onchange={handleFormData}/>
 <input type="text" className='p-2 border rounded-md w-full outline-none' placeholder='Email' id="email" readOnly value={user.email}/>
 <input type="text" className='p-2 border rounded-md w-full outline-none' placeholder='Password' id="password" onChange={handleFormData}/>
    <Button   styles='bg-slate-500 hover:opacity-95 disabled:opacity-80 rounded-md p-2 w-full my-2' text={loading ? 'Submitting...' : 'Update Fiels'}></Button>
       </form>
       {error && <p>{error.message}</p>}
   
-<Button type='button'  styles='bg-green-500 hover:opacity-95 disabled:opacity-80 rounded-md p-2 w-full my-1' text='Create New Listing'></Button>
+<Link to={'/newListing'} className='bg-green-500 hover:opacity-95 text-center rounded-md p-2 w-full block my-1' >Create New Listing</Link>
 
       <div className='flex justify-between mt-2'>
         <span className='text-red-700 hover:cursor-pointer' onClick={handleDeleteUser}>Delete This Account</span>
