@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../Components/Input";
 import Button from "../Components/Button";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import {  useNavigate } from "react-router-dom";
+import {  useLocation, useNavigate, useParams } from "react-router-dom";
 
 const Listing = () => {
   const { user } = useSelector((state) => state.user);
+  const { list} = useSelector((state) => state.list);
+
   const [imgUploaded, setimgUploaded] = useState(0);
   const [images, setimages] = useState([]);
   const [imageUrl, setimageUrl] = useState([]);
   const [formerror,setformerror]=useState('');
   const [formloading,setformloading] =useState(false)
-
+  const [newlocation ,setnewlocation] = useState('')
+const location = useLocation()
   const [formdata, setformdata] = useState({
     imageUrls: [],
     name: "",
@@ -31,6 +34,18 @@ const Listing = () => {
   const [loading, setloading] = useState(false);
   const navigate = useNavigate() 
   console.log(typeof images);
+    const params = useParams();
+ useEffect(() => {
+    if (location.pathname.includes('/updateListing')) {
+      setnewlocation('updateListing')
+      const matchedItem = list.find((item) => item._id === params.id);
+      console.log(matchedItem)
+    setimageUrl(matchedItem.imageUrls)
+        setformdata(matchedItem);
+        console.log("the form data isd", formdata) // assuming this sets your form
+      
+    }
+  }, []);
 
   const handleUploadImages = () => {
     console.log(images.length);
@@ -102,6 +117,7 @@ const Listing = () => {
   const handleSubmitForm =async (e)=>{
     e.preventDefault();
 
+   if(location.pathname === '/newListing'){ 
     try {
       setformloading(true)
       const res = await axios.post('/server/listing/create', {
@@ -114,41 +130,56 @@ const Listing = () => {
   navigate(`/newListing/${res.data._id}`)
     } catch (error) {
           setformerror(error)
+    }} else{
+      try {
+      setformloading(true)
+      const res = await axios.put(`/server/listing/update/${formdata._id}`, {
+    ...formdata,
+    userRef: user._id,
+    
+  })
+  console.log(res.data)
+  setformloading(false)
+  navigate(`/newListing/${res.data._id}`)
+    } catch (error) {
+          setformerror(error)
     }
+    }  
   }
+  
   return (
     <main className="max-w-4xl mx-auto px-4 py-6">
       <h1 className="text-2xl font-bold text-center mb-9">
-        Create a New Listing
+        {newlocation == 'updateListing' ? 'Update a Current Listing' :'Create a New Listing'}
       </h1>
 
       <form className="flex flex-col sm:flex-row gap-6" onSubmit={handleSubmitForm}>
         {/* Left Section */}
         <div className="flex-1 flex flex-col gap-4">
-          <Input type={'text'} max={65} min={10} req={true} plc="Name" id={"name"} onchange={handleformData} value={formdata.name}/>
+          <Input type={'text'} max={65} min={10} req={true} plc="Name" id={"name"}  onchange={handleformData} value={formdata.name}/>
           <Input type={'text'} plc="Description" req={true} id={"description"} onchange={handleformData} value={formdata.description}/>
           <Input plc="Address" id={"address"} req={true} onchange={handleformData} value={formdata.address}/>
 
           <div className="flex flex-row gap-3 ">
             <label className="flex flex-row items-center">
-              <Input type="checkbox" id={"sell"} req={true} onchange={handleformData} chk={formdata.type === 'sell'}/>
+              <Input type="checkbox" id={"sell"}  onchange={handleformData} chk={formdata.type === 'sell'} />
               <span>Sell</span>
             </label>
             <label className="flex flex-row items-center">
-              <Input type="checkbox" id={"rent"} req={true} onchange={handleformData} chk={formdata.type === 'rent'}/>
+              <Input type="checkbox" id={"rent"} onchange={handleformData} chk={formdata.type === 'rent'}/>
               <span>Rent</span>
             </label>
 
             <label className="flex flex-row items-center">
-              <Input type="checkbox" id={"furnished"} req={true} onchange={handleformData} chk={formdata.furnished} />
+              <Input type="checkbox" id={"furnished"}  onchange={handleformData} chk={formdata.furnished} />
               <span>Furnished</span>
             </label>
             <label className="flex flex-row items-center">
-              <Input type="checkbox" id={"offer"} req={true} onchange={handleformData} chk={formdata.offer}/>
+              <Input type="checkbox" id={"offer"} onchange={handleformData} chk={formdata.offer}/>
               <span>Offered</span>
             </label>
             <label className="flex flex-row items-center">
-              <Input type="checkbox" styles={"w-fit"} id={"parking"}  req={true} onchange={handleformData} chk={formdata.parking}/>
+              <Input type="checkbox" styles={"w-fit"} id={"parking"}   onchange={handleformData} chk={formdata.parking}/>
               <span className=" w-full">Parking Spot</span>
             </label>
           </div>
@@ -167,11 +198,13 @@ const Listing = () => {
               <Input type="number" id={"regularprice"} req={true} value={formdata.regularprice} onchange={handleformData}/>
               <span>Regular Price</span>
             </label>
+            
+          </div>
+          {formdata.offer  &&
             <label className="flex flex-row  items-center">
               <Input type="number" id={"offerprice"} req={true} value={formdata.discountprice} onchange={handleformData}/>
               <span>Discountd Price ($) %</span>
-            </label>
-          </div>
+            </label>}
         </div>
         <div className="flex flex-1 flex-col gap-2">
           <div className="flex flex-row gap-2">
@@ -185,7 +218,7 @@ const Listing = () => {
                 multiple
                 accept="images/*"
                 onChange={(e) => setimages(e.target.files)}
-                required
+                required ={newlocation == 'updateListing' ? false :true}
               />
               <p className="text-green-500 font-bold ">{imgUploaded}% </p>
             </div>
@@ -212,7 +245,7 @@ const Listing = () => {
  <Button disabled={formloading || imageUrl.length === 0} 
 
             styles={"p-2 bg-gray-600 text-white disabled:opacity-85 w-full block rounded-md"}
-            text={formloading ? "CreateingListing" : "Create Listing"}
+            text={newlocation == 'updateListing'   ? loading ? "Updating..."  : "Update Listing" : loading ? "Creating..." : "Create List" }
           ></Button>
           {setformerror ? <p>{formerror}</p> : null}
 

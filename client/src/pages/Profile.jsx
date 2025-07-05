@@ -18,9 +18,11 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../Components/Input";
 import Block from "../Components/Block";
+import { setListings } from "../redux/user/listingSlice";
 
 const Profile = () => {
   const { user, error, loading } = useSelector((state) => state.user);
+  const {list} = useSelector((state)=>state.list)
   const [progress, setProgress] = useState(0);
   const [tempdata, settempdata] = useState({});
   const dispatch = useDispatch();
@@ -135,6 +137,8 @@ const Profile = () => {
            const res = await axios.get(`/server/listing/fetch/${user._id}`)
            console.log(res.data)
            setuserListings(res.data)
+           dispatch(setListings(res.data))
+           console.log("reducer List",list)
          } catch (error) {
           
          }
@@ -146,6 +150,9 @@ const Profile = () => {
                    console.log(res)
                    if(res.status ==200){
                     setuserListings((prev)=>prev.filter((item)=> item._id != listId))
+                   dispatch(setListings(prev.filter((item) => item._id != listId)))
+
+                    conso9le.log("Reducer list",list)
                     setdeleteListerror(null)
                     return
                    }
@@ -214,7 +221,7 @@ const Profile = () => {
       {error && <p>{error.message}</p>}
 
       <Link
-        to={`/newListing/${user._id}`}
+        to={`/newListing`}
         className="bg-green-500 hover:opacity-95 text-center rounded-md p-2 w-full block my-1"
       >
         Create New Listing
@@ -241,7 +248,7 @@ const Profile = () => {
     {userListings.length !=0 ? <p className="font-bold my-1 text-center">Your Listings</p> : ""}
     {deleteListerror != null ? <p>{deleteListerror}</p> : " "}
      {userListings?.map((item) => (
- <Block list = {item} editButton={()=>handleEditListing(item._id)} deleteButton={()=>handleDeleteListing(item._id)} editButtonLink={`/newListing/${item._id}`} linkto={`/listing/${user._id}`}></Block>
+ <Block list = {item}  deleteButton={()=>handleDeleteListing(item._id)} editButtonLink={`/updateListing/${item._id}`} linkto={`/listing/${user._id}`}></Block>
 ))}
   
     </div>
