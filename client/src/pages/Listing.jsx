@@ -3,6 +3,7 @@ import Input from "../Components/Input";
 import Button from "../Components/Button";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import {  useNavigate } from "react-router-dom";
 
 const Listing = () => {
   const { user } = useSelector((state) => state.user);
@@ -11,6 +12,7 @@ const Listing = () => {
   const [imageUrl, setimageUrl] = useState([]);
   const [formerror,setformerror]=useState('');
   const [formloading,setformloading] =useState(false)
+
   const [formdata, setformdata] = useState({
     imageUrls: [],
     name: "",
@@ -27,6 +29,7 @@ const Listing = () => {
   });
   const [error, seterror] = useState("");
   const [loading, setloading] = useState(false);
+  const navigate = useNavigate() 
   console.log(typeof images);
 
   const handleUploadImages = () => {
@@ -108,6 +111,7 @@ const Listing = () => {
   })
   console.log(res.data)
   setformloading(false)
+  navigate(`/newListing/${res.data._id}`)
     } catch (error) {
           setformerror(error)
     }
@@ -122,29 +126,29 @@ const Listing = () => {
         {/* Left Section */}
         <div className="flex-1 flex flex-col gap-4">
           <Input type={'text'} max={65} min={10} req={true} plc="Name" id={"name"} onchange={handleformData} value={formdata.name}/>
-          <Input type={'text'} plc="Description" id={"description"} onchange={handleformData} value={formdata.description}/>
-          <Input plc="Address" id={"address"} onchange={handleformData} value={formdata.address}/>
+          <Input type={'text'} plc="Description" req={true} id={"description"} onchange={handleformData} value={formdata.description}/>
+          <Input plc="Address" id={"address"} req={true} onchange={handleformData} value={formdata.address}/>
 
           <div className="flex flex-row gap-3 ">
             <label className="flex flex-row items-center">
-              <Input type="checkbox" id={"sell"} onchange={handleformData} chk={formdata.type === 'sell'}/>
+              <Input type="checkbox" id={"sell"} req={true} onchange={handleformData} chk={formdata.type === 'sell'}/>
               <span>Sell</span>
             </label>
             <label className="flex flex-row items-center">
-              <Input type="checkbox" id={"rent"} onchange={handleformData} chk={formdata.type === 'rent'}/>
+              <Input type="checkbox" id={"rent"} req={true} onchange={handleformData} chk={formdata.type === 'rent'}/>
               <span>Rent</span>
             </label>
 
             <label className="flex flex-row items-center">
-              <Input type="checkbox" id={"furnished"} onchange={handleformData} chk={formdata.furnished} />
+              <Input type="checkbox" id={"furnished"} req={true} onchange={handleformData} chk={formdata.furnished} />
               <span>Furnished</span>
             </label>
             <label className="flex flex-row items-center">
-              <Input type="checkbox" id={"offer"} onchange={handleformData} chk={formdata.offer}/>
+              <Input type="checkbox" id={"offer"} req={true} onchange={handleformData} chk={formdata.offer}/>
               <span>Offered</span>
             </label>
             <label className="flex flex-row items-center">
-              <Input type="checkbox" styles={"w-fit"} id={"parking"} onchange={handleformData} chk={formdata.parking}/>
+              <Input type="checkbox" styles={"w-fit"} id={"parking"}  req={true} onchange={handleformData} chk={formdata.parking}/>
               <span className=" w-full">Parking Spot</span>
             </label>
           </div>
@@ -152,19 +156,19 @@ const Listing = () => {
           {/* Number Inputs (Beds/Baths) */}
           <div className="flex flex-row gap-3  ">
             <label className="flex flex-row items-center">
-              <Input type="number" min={'1'}  id={"bedrooms"} onchange={handleformData} value={formdata.bedrooms}/>
+              <Input type="number" min={'1'}  id={"bedrooms"} req={true} onchange={handleformData} value={formdata.bedrooms}/>
               <span>Beds</span>
             </label>
             <label className="flex flex-row items-center">
-              <Input type="number" id={"bathrooms"} value={formdata.bathrooms} onchange={handleformData}/>
+              <Input type="number" id={"bathrooms"} req={true} value={formdata.bathrooms} onchange={handleformData}/>
               <span>Bathrooms</span>
             </label>
             <label className="flex flex-row items-center ">
-              <Input type="number" id={"regularprice"} value={formdata.regularprice} onchange={handleformData}/>
+              <Input type="number" id={"regularprice"} req={true} value={formdata.regularprice} onchange={handleformData}/>
               <span>Regular Price</span>
             </label>
             <label className="flex flex-row  items-center">
-              <Input type="number" id={"offerprice"} value={formdata.discountprice} onchange={handleformData}/>
+              <Input type="number" id={"offerprice"} req={true} value={formdata.discountprice} onchange={handleformData}/>
               <span>Discountd Price ($) %</span>
             </label>
           </div>
@@ -186,7 +190,7 @@ const Listing = () => {
               <p className="text-green-500 font-bold ">{imgUploaded}% </p>
             </div>
             <Button
-              disabled={loading ? true : false}
+              disabled={loading }
               type={"button"}
               onclick={handleUploadImages}
               styles={" p-2 bg-gray-600 text-white disabled:text-gray-85 rounded-md"}
@@ -205,7 +209,8 @@ const Listing = () => {
               ? error
               : "No image found"}
           </div>
-          <Button disabled={formloading ? true : false}
+ <Button disabled={formloading || imageUrl.length === 0} 
+
             styles={"p-2 bg-gray-600 text-white disabled:opacity-85 w-full block rounded-md"}
             text={formloading ? "CreateingListing" : "Create Listing"}
           ></Button>

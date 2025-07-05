@@ -17,6 +17,7 @@ import {
 } from "../redux/user/userSlice";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../Components/Input";
+import Block from "../Components/Block";
 
 const Profile = () => {
   const { user, error, loading } = useSelector((state) => state.user);
@@ -24,7 +25,9 @@ const Profile = () => {
   const [tempdata, settempdata] = useState({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [deleteListerror ,setdeleteListerror] = useState(null)
   const refImg = useRef();
+  const [userListings,setuserListings] =useState([])
   const handleImageUpload = async () => {
     const formdata = new FormData();
     const file = refImg.current.files[0];
@@ -127,8 +130,32 @@ const Profile = () => {
       console.log(error);
     }
   };
+  const handleShowListing =async ()=>{
+         try {
+           const res = await axios.get(`/server/listing/fetch/${user._id}`)
+           console.log(res.data)
+           setuserListings(res.data)
+         } catch (error) {
+          
+         }
+  }
+  const handleDeleteListing =async (listId)=>{
+    console.log(listId)
+              try {
+                   const res = await axios.delete(`/server/listing/delete/${listId}`)
+                   console.log(res)
+                   if(res.status ==200){
+                    setuserListings((prev)=>prev.filter((item)=> item._id != listId))
+                    setdeleteListerror(null)
+                    return
+                   }
+                   setdeleteListerror(res.data.message)
+              } catch (error) {
+                 setdeleteListerror(error.message)
+              }
+  }
   return (
-    <div className="max-w-lg mx-auto">
+    <div className="max-w-lg mx-auto mb-5">
       <h1 className="text-center my-7">Profile</h1>
       <form
         action=""
@@ -187,7 +214,7 @@ const Profile = () => {
       {error && <p>{error.message}</p>}
 
       <Link
-        to={"/newListing"}
+        to={`/newListing/${user._id}`}
         className="bg-green-500 hover:opacity-95 text-center rounded-md p-2 w-full block my-1"
       >
         Create New Listing
@@ -207,10 +234,18 @@ const Profile = () => {
           Sign out
         </span>
       </div>
-      <p className="text-green-700 text-center font-semibold mt-7 hover:cursor-pointer">
-        See all Listing
-      </p>
+      
+      <Button onclick = {handleShowListing} styles="text-green-500 text-center font-semibold mt-7 w-full block mx-auto hover:cursor-pointer" text={"See All Listings"}>
+       
+      </Button>
+    {userListings.length !=0 ? <p className="font-bold my-1 text-center">Your Listings</p> : ""}
+    {deleteListerror != null ? <p>{deleteListerror}</p> : " "}
+     {userListings?.map((item) => (
+ <Block list = {item} editButton={()=>handleEditListing(item._id)} deleteButton={()=>handleDeleteListing(item._id)} editButtonLink={`/newListing/${item._id}`} linkto={`/listing/${user._id}`}></Block>
+))}
+  
     </div>
+
   );
 };
 
