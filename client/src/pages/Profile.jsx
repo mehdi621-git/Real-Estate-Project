@@ -248,7 +248,7 @@ const Profile = () => {
     {userListings.length !=0 ? <p className="font-bold my-1 text-center">Your Listings</p> : ""}
     {deleteListerror != null ? <p>{deleteListerror}</p> : " "}
      {userListings?.map((item) => (
- <Block list = {item}  deleteButton={()=>handleDeleteListing(item._id)} editButtonLink={`/updateListing/${item._id}`} linkto={`/listing/${user._id}`}></Block>
+ <Block list = {item}  deleteButton={()=>handleDeleteListing(item._id)} editButtonLink={`/updateListing/${item._id}`} linkto={`/property-listing/${item._id}`}></Block>
 ))}
   
     </div>

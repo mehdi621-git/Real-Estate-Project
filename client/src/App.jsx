@@ -9,6 +9,7 @@ import Header from './Components/Header'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import PrivateRoot from './pages/PrivateRoot'
 import Listing from './pages/Listing'
+import ViewList from './pages/ViewList'
 
 
 
@@ -29,6 +30,8 @@ function App() {
   <Route path='/about' element={<About></About>}></Route>
   <Route path='/newListing' element={<Listing></Listing>}></Route>
   <Route path='/updateListing/:id' element={<Listing></Listing>}></Route>
+  <Route path='/property-listing/:id' element={<ViewList></ViewList>}></Route>
+
 
 
 

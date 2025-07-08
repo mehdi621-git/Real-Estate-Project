@@ -49,3 +49,11 @@ const findList =await Listing.findById(req.params.id)
         next(error)
     }
 }
+export const getAList =async (req,res,next)=>{
+ try {
+         const userLists = await Listing.find({_id : req.params.id})
+         return res.status(200).json(userLists)
+    } catch (error) {
+        next(error)
+    }
+}
