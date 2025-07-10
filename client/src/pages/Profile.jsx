@@ -135,12 +135,13 @@ const Profile = () => {
   const handleShowListing =async ()=>{
          try {
            const res = await axios.get(`/server/listing/fetch/${user._id}`)
+           console.log(user._id)
            console.log(res.data)
            setuserListings(res.data)
            dispatch(setListings(res.data))
            console.log("reducer List",list)
          } catch (error) {
-          
+          console.log(error)
          }
   }
   const handleDeleteListing =async (listId)=>{
@@ -195,7 +196,7 @@ const Profile = () => {
           styles="p-2 border rounded-md  w-full outline-none"
           plc="UserName"
           id="username"
-          defVal={user.username}
+          value={user.username}
           onchange={handleFormData}
         />
         <input

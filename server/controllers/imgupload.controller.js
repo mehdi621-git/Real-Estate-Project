@@ -33,6 +33,7 @@ console.log(userId)
       });
 
     const result = await streamUpload();
+    console.log(result)
      
     if (!userId) {
         console.log(userId) 

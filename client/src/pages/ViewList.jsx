@@ -5,15 +5,19 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import { FaBed } from "react-icons/fa";
 import { FaBath } from "react-icons/fa";
 import { LuWarehouse } from "react-icons/lu";
+import {  useSelector } from "react-redux";
 import "swiper/css";
 import "swiper/css/autoplay";
 import axios from "axios";
 import { IoArrowRedoCircle } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import { FaSquareParking } from "react-icons/fa6";
+import Button from "../Components/Button";
+import Contact from "../Components/Contact";
 const ViewList = () => {
+  const [contact,setcontact] =useState(false)
   const [list, setlist] = useState([]);
-
+    const { user } = useSelector((state) => state.user);
   const params = useParams();
   console.log("the params is", params.id);
   useEffect(() => {
@@ -54,9 +58,17 @@ const ViewList = () => {
       </Swiper>
       <div className="max-w-4xl sm:mx-auto px-4">
         <h1 className=" font-extrabold text-3xl my-1">
-          {list.name + "   --->"}{" "}
-          {list.offer && +list.regularprice - +list.offerprice}${" "}
-          {list.type == "rent" && "/ month"}
+     {list.name + " --->"}{" "}
+
+{list.offer && typeof list.regularprice === 'number' && typeof list.offerprice === 'number'
+  ? (list.regularprice - list.offerprice).toLocaleString('en-US')
+  : typeof list.regularprice === 'number'
+    ? list.regularprice.toLocaleString('en-US')
+    : 'Price not available'
+}{" $"}
+
+{list.type === "rent" && " / month"}
+
         </h1>
         <div className="flex gap-2 items-center my-4 ml-2">
           <FaMapMarkerAlt color="green" />
@@ -66,7 +78,7 @@ const ViewList = () => {
           <p className="p-2 text-white bg-red-600 rounded-lg w-fit">
             {list.type == "sell" ? "Sale" : "Rent"}
           </p>
-          {list.offer && (
+          {list.offer ==true && (
             <p className="p-2 text-white bg-green-600 rounded-lg w-fit">
               {list.offerprice + "$ dicount"}
             </p>
@@ -95,6 +107,13 @@ const ViewList = () => {
             <LuWarehouse />
           </div>
         </div>
+          
+ {/* user && user._id !=list.userRef  &&  */}
+{!contact ?
+  <Button onclick={()=>setcontact(true)} text={'Send Message'} styles={'bg-blue-600 text-white my-2 p-2 rounded-md'}></Button>
+     :''       }
+{contact && <Contact NList={list}></Contact>}
+
       </div>
     </main>
   );

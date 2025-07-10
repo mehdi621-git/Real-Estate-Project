@@ -25,7 +25,7 @@ const location = useLocation()
     bedrooms: 1,
     bathrooms: 1,
     regularprice: 0,
-    discountprice: 0,
+    offerprice: 0,
     offer: false,
     parking: false,
     furnished: false,
@@ -56,10 +56,7 @@ const location = useLocation()
         uploadImage(images[0]);
       }
       
-       setformdata((prev) => ({
-  ...prev,
-  imageUrls: imageUrl,
-}))
+      
     } else {
       console.log("Length exceeds");
     }
@@ -83,8 +80,17 @@ const location = useLocation()
           },
         }
       );
-      setimageUrl([...imageUrl, res.data.user.photo]);
+     
+
+      console.log(imageUrl)
      setloading(false);
+
+     const updatedImages = [...imageUrl, res.data.user.photo];
+setimageUrl(updatedImages);
+setformdata((prev) => ({
+  ...prev,
+  imageUrls: updatedImages,
+}));
 
       console.log(res.data.user);
       console.log(imageUrl);
@@ -116,7 +122,7 @@ const location = useLocation()
   };
   const handleSubmitForm =async (e)=>{
     e.preventDefault();
-
+     if(formdata.offerprice < formdata.regularprice){
    if(location.pathname === '/newListing'){ 
     try {
       setformloading(true)
@@ -127,7 +133,7 @@ const location = useLocation()
   })
   console.log(res.data)
   setformloading(false)
-  navigate(`/newListing/${res.data._id}`)
+  navigate(`/property-listing/${res.data._id}`)
     } catch (error) {
           setformerror(error)
     }} else{
@@ -140,11 +146,13 @@ const location = useLocation()
   })
   console.log(res.data)
   setformloading(false)
-  navigate(`/newListing/${res.data._id}`)
+  navigate(`/property-listing/${res.data._id}`)
     } catch (error) {
           setformerror(error)
     }
-    }  
+    }  }else{
+      console.log("discount is larger than regualr price")
+    }
   }
   
   return (
@@ -202,7 +210,7 @@ const location = useLocation()
           </div>
           {formdata.offer  &&
             <label className="flex flex-row  items-center">
-              <Input type="number" id={"offerprice"} req={true} value={formdata.discountprice} onchange={handleformData}/>
+              <Input type="number" id={"offerprice"}  value={formdata.offerprice} onchange={handleformData}/>
               <span>Discountd Price ($) %</span>
             </label>}
         </div>
@@ -245,7 +253,7 @@ const location = useLocation()
  <Button disabled={formloading || imageUrl.length === 0} 
 
             styles={"p-2 bg-gray-600 text-white disabled:opacity-85 w-full block rounded-md"}
-            text={newlocation == 'updateListing'   ? loading ? "Updating..."  : "Update Listing" : loading ? "Creating..." : "Create List" }
+            text={"Creating" }
           ></Button>
           {setformerror ? <p>{formerror}</p> : null}
 

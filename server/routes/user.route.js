@@ -1,10 +1,9 @@
 
 import express from 'express'
-const router =express.Router();
-router.get('/test',(req,res)=>{
-    res.send("Connected to server from router")
-}) 
+import { getUser } from '../controllers/user.controller.js';
+const route =express.Router();
+
+route.get('/getuser/:id',getUser)
 
 
-
-export default router
+export default route
