@@ -17,7 +17,7 @@ import Contact from "../Components/Contact";
 const ViewList = () => {
   const [contact,setcontact] =useState(false)
   const [list, setlist] = useState([]);
-    const { user } = useSelector((state) => state.user);
+
   const params = useParams();
   console.log("the params is", params.id);
   useEffect(() => {

@@ -177,7 +177,7 @@ navigate(`/search?${query}`)
       {/* Right Panel */}
       <div className="sm:w-[70%] w-full bg-gray-200 p-4">
         <h1 className="font-extrabold text-2xl">Listing Items</h1>
-        { loading ? <p>Loading</p> : searchdata != null ? <SearchResultsBox searchListings = {searchdata}></SearchResultsBox> : <p>No data Found</p>}
+        { loading ? <p>Loading</p> : searchdata != null ? <SearchResultsBox searchListings = {searchdata} styles={'my-4'}></SearchResultsBox> : <p>No data Found</p>}
    {showMore &&    <Button onclick={handleShowMore} text={'Show more'} styles={'text-green-500 font-bold'}></Button>}
 
       </div>

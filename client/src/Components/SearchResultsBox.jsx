@@ -2,15 +2,16 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { FaMapMarkerAlt } from "react-icons/fa";
 
-const SearchResultsBox = ({searchListings}) => {
+const SearchResultsBox = ({searchListings ,styles}) => {
   console.log("from search box",searchListings)
   return (
-    <div className=' shadow-md transition-shadow hover:shadow-lg overflow-hidden rounded-lg w-full sm:[330px] flex gap-2 my-4'>
+    <div className={`  shadow-md transition-shadow hover:shadow-lg overflow-hidden rounded-lg w-full sm:[330px] flex gap-2  flex-wrap ${styles }`}>
+
 
     {searchListings?.map((list)=>(
 <Link
   to={`/property-listing/${list._id}`}
-  className="w-full sm:w-[300px] md:w-[320px] lg:w-[340px] bg-white rounded-lg shadow-sm hover:shadow-md transition duration-200 overflow-hidden border border-gray-200"
+  className="w-full sm:w-[280px] md:w-[300px] lg:w-[320px] bg-white rounded-lg shadow-sm hover:shadow-md transition duration-200 overflow-hidden border border-gray-200"
 >
 
   <img
