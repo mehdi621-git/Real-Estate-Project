@@ -53,7 +53,7 @@ const Home = () => {
   return (
     <div>
       {/* Top */}
-      <div className="flex flex-col gap-6 py-28 px-3 max-w-6xl mx-auto">
+      <div className="flex flex-col gap-6 py-24 px-3 max-w-6xl mx-auto">
         <h1 className="text-slate-500 font-bold text-3xl lg:text-6xl">
           Find Your Next<span className="text-slate-400"> Perfect </span> <br />{" "}
           Place with Ease

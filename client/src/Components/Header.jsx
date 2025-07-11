@@ -26,7 +26,7 @@ const navigate=useNavigate()
     <Link to={'/'}>
     <h1 className=' flex flex-wrap text-sm sm:text-xl '>
             <span className='text-white font-semibold '>Mehdi</span>
-            <span className='text-blue-900 font-bold'>Estate</span>
+            <span className='text-blue-900 font-bold'> Estate</span>
 
         </h1>
         </Link>
@@ -36,10 +36,10 @@ const navigate=useNavigate()
   <IoSearchSharp className='hover:cursor-pointer ' />
   </button>
         </form>
-        <ul className='flex justify-between gap-4 p-2'>
+        <ul className='flex justify-between gap-4 p-2 font-bold'>
         <Link to={'/'}>   <li className='hover:underline hover:cursor-pointer'>Home</li></Link> 
           <Link to={'/about'}>      <li className='hover:underline hover:cursor-pointer'>About</li></Link> 
-            <Link to={'/profile'}>   {user? <img src={user.photo} alt="" className='w-7 h-7' />: <li className='hover:underline hover:cursor-pointer'>Signup</li>}</Link> 
+            <Link to={'/profile'}>   {user? <img src={user.photo} alt="" className='w-7 h-7 rounded-md' />: <li className='hover:underline hover:cursor-pointer'>Signup</li>}</Link> 
         </ul>
 </div>
     
