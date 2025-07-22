@@ -59,7 +59,7 @@ export const getAList =async (req,res,next)=>{
 }
 
 export const SearchListing = async (req,res,next)=>{
-    console.log("Query is: " + JSON.stringify(req.query)); // ✅ Works in concatenation
+    console.log("Query is: " + JSON.stringify(req.query));
 
     try {
         const limit =parseInt(req.query.limit) || 9;

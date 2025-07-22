@@ -86,7 +86,7 @@ const Profile = () => {
         dispatch(UpdateProfileError("Username Already Exists"));
         return;
       }
-      dispatch(UpdateUserProgress());
+      dispatch(UpdateUserProgress(data.rest));
       console.log(data);
     } catch (error) {
       if (error.statuscode == 11000) {
@@ -196,7 +196,7 @@ const Profile = () => {
           styles="p-2 border rounded-md  w-full outline-none"
           plc="UserName"
           id="username"
-          value={user.username}
+          defVal={user.username}
           onchange={handleFormData}
         />
         <input

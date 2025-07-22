@@ -50,10 +50,10 @@ const location = useLocation()
   const handleUploadImages = () => {
     console.log(images.length);
    
-    if (imageUrl.length >= 0 && imageUrl.length < 7) {
+    if (images.length >= 0 && images.length < 7) {
       for (let i = 0; i < images.length; i++) {
        
-        uploadImage(images[0]);
+        uploadImage(images[i]);
       }
       
       
@@ -82,11 +82,12 @@ const location = useLocation()
       );
      
 
-      console.log(imageUrl)
+      console.log("uploaded", res.data.user.photo)
      setloading(false);
 
      const updatedImages = [...imageUrl, res.data.user.photo];
-setimageUrl(updatedImages);
+setimageUrl((prev) => [...prev, res.data.user.photo]);
+
 setformdata((prev) => ({
   ...prev,
   imageUrls: updatedImages,
