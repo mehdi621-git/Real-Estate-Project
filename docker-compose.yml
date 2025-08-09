@@ -1,0 +1,31 @@
+
+
+services:
+  frontend:
+    build:
+      context: ./client
+    container_name: client
+    ports:
+      - "80:80"
+    restart: always
+    networks:
+      - threetier
+    depends_on:
+      - backend
+  backend:
+    build:
+      context: ./server
+    container_name: backend
+    ports:
+      -  "3000:3000"
+    networks:
+      - threetier
+    environment:
+      MONGO : "mongodb+srv://mm3328393:Ic2TDUorEnPIW24J@forrealestate.qva0fom.mongodb.net/?retryWrites=true&w=majority&appName=ForRealEstate" 
+      jwtTOKEN : 'rtr45k8'
+      CLOUDINARY_API_SECRET: i6Jixl9i7qUVtwAPle3xGZeTjDs
+      CLOUDINARY_API_KEY: 415739932351296
+      CLOUDINARY_CLOUD_NAME: dylp3vzyi
+
+networks:
+  threetier:

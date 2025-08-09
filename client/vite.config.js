@@ -6,10 +6,12 @@ export default defineConfig({
   server:{
     proxy:{
       '/server':{
-       target: "http://localhost:3000",
+       target: "http://backend:3000",
       secure:false,
+	      rewrite: path => path.replace(/^\/server/, ''),
       },
     },
+	 
     headers: {
     'Cross-Origin-Opener-Policy': 'same-origin-allow-popups'
   }
